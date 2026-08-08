@@ -3,10 +3,14 @@
 
 # Unidad 3. Widgets
 
-**En esta unidad** empezamos a trabajar con la programación de interfaces gráficas con Flutter.  
-Flutter sigue una **filosofía declarativa** a la hora de crear interfaces, a diferencia de la filosofía imperativa tradicional. El concepto alrededor del cual girará todo el desarrollo de interfaces en Flutter es el *widget*, que representará básicamente un componente gráfico. En los siguientes apartados veremos los diferentes tipos de widgets y algunos de los más importante o comunes.
+En esta unidad comenzaremos a trabajar con el desarrollo de interfaces gráficas en Flutter.  
+Flutter sigue una **filosofía declarativa** a la hora de crear interfaces, a diferencia de la filosofía imperativa tradicional. 
 
-![Flutter](./images/imagen1.jpeg)
+El concepto alrededor del cual gira el desarrollo de interfaces en Flutter es el widget. Un widget describe una parte de la interfaz o de su comportamiento, ya sea un elemento visual, su disposición en pantalla o una característica funcional de la aplicación.
+
+En los siguientes apartados estudiaremos los diferentes tipos de widgets y algunos de los más importantes y utilizados, comprendiendo cómo se combinan para construir la interfaz de una aplicación Flutter.
+
+![Flutter](./images/imagen01.jpg)
 
 [*1. Introducción a los Widgets*](#_apartado1)
 
@@ -16,7 +20,7 @@ Flutter sigue una **filosofía declarativa** a la hora de crear interfaces, a di
 
 [*4. Widgets Básicos*](#_apartado4)
 
-[*5. Widgets básicos. Contenedores y diseños*](#_apartado5)
+[*5. Contenedores y sistemas de diseño (Layouts)*](#_apartado5)
 
 [*6. Trabajando con recursos*](#_apartado6)
 
@@ -29,13 +33,13 @@ Flutter sigue una **filosofía declarativa** a la hora de crear interfaces, a di
 
 ## Introducción. Interfaces declarativas e imperativas.
 
-El desarrollo tradicional de interfaces de usuario se ha basado en un **estilo imperativo**, en el que definimos qué deseamos que se represente a la interfaz y cómo queremos hacerlo. Tanto en aplicaciones de escritorio, como web o móviles solemos especificar la interfaz de usuario mediante ficheros basados en XML (XML puro, HTML, QML, etc.), que hay que transformar en elementos manipulables y enlazarlos de alguna manera con el código de la aplicación.
+Aunque muchas tecnologías han utilizado lenguajes declarativos para describir interfaces (HTML, XML, XAML, etc.), la actualización y manipulación de estas interfaces se ha realizado tradicionalmente mediante **programación imperativa**, en el que definimos qué deseamos que se represente a la interfaz y cómo queremos hacerlo. Tanto en aplicaciones de escritorio, como web o móviles solemos especificar la interfaz de usuario mediante ficheros basados en XML (XML puro, HTML, QML, etc.), que hay que transformar en elementos manipulables y enlazarlos de alguna manera con el código de la aplicación.
 
 En contraposición a esta visión, el **paradigma declarativo**, presente en el mundo de la programación desde la década de 1950, propone un mayor nivel de abstracción, y se centra en el *qué* y no en el *cómo*. Aplicado al diseño de interfaces, la idea es que nos centremos en *describir* el estado *actual* de la interfaz, y dejemos para el framework la representación del mismo y las transiciones entre estados. Es decir, la interfaz de usuario se genera en función del estado que queremos representar:
 
 ![Interfaz en función del estado. Font: esflutter.dev, sota llicència CC by 4.0](./images/imagen2.png)
 
-La tendencia actual en el desarrollo de interfaces de usuario hacia interfaces declarativas surgió con frameworks como *React*, que introdujo los ficheros JSX, donde convivía código Javascript con HTML. Posteriormente, fue *Flutter* quien entró en acción en la Google I/O en 2017, y este cambio también ha llegado a Android nativo, con *Jetpack Compose* y las interfaces *componibles*, en iOS, con *SwiftUI*, e incluso en entornos como Unity, con *UIWidget*.
+La tendencia actual en el desarrollo de interfaces de usuario hacia interfaces declarativas fue impulsada y popularizada por frameworks como *React*, que introdujo los ficheros JSX, donde convivía código Javascript con HTML. Posteriormente, fue *Flutter* quien entró en acción en la Google I/O en 2017, y este cambio también ha llegado a Android nativo, con *Jetpack Compose* y las interfaces *componibles*, en iOS, con *SwiftUI*, e incluso en entornos como Unity, con *UIWidget*.
 
 ### Pensando de forma declarativa
 
@@ -105,10 +109,16 @@ Disponemos de más informarción en los siguientes artículos:
 El concepto fundamental en torno al cual gira todo el desarrollo de Flutter es el de **widget**. De hecho, en Flutter, salvo nuestras propias clases para mantener información y los modelos de datos, todo serán *widgets*.
 
 Pero, ¿qué son entonces los *widgets*?  
-Se trata de **clases de Dart cuyos constructores admiten tanto argumentos posicionales como argumentos con nombre, y que nos sirven para representar los elementos de nuestras interfaces**. En el ejemplo del apartado anterior, hemos presentado ya dos tipos de Widgets: `Center`, un *widget* de tipo contenedor y `Text`.
+Un widget es una clase que **describe una parte de la interfaz de usuario o de su comportamiento**. Los widgets se configuran mediante sus constructores y pueden representar elementos visuales, estructuras de diseño o mecanismos de interacción.
+
+En el ejemplo del apartado anterior, hemos presentado ya dos tipos de Widgets: `Center`, un *widget* de tipo contenedor y `Text`.
 
 Los *widgets*, además, pueden componerse con el fin de crear una estructura en forma de árbol que representa la interfaz, y pueden ser widgets sin estado (*`Stateless`*) o con estado (*`Stateful`*), en función de si el widget necesita un estado asociado que pueda estar sometido a cambios.  
-Por ejemplo, un botón o un texto estático, que no cambian, y pueden declararse como constantes, serían buenos candidatos para ser un widget sin estado, mientras que un componente que vaya a muestra el resultado de un llamamiento asíncrono, sería candidato a ser un widget con estado. Una diferencia importante entre ambos tipos es que los widgets con estado tienen la capacidad de *redibujarse* ellos mismos ante cualquier cambio de estado, mientras que los widgets sin estado no pueden hacerlo.
+Por ejemplo, un botón o un texto estático, que no cambian, y pueden declararse como constantes, serían buenos candidatos para ser un widget sin estado, mientras que un componente que vaya a muestra el resultado de un llamamiento asíncrono, sería candidato a ser un widget con estado. 
+
+Los widgets con estado disponen de un objeto State asociado que les permite mantener información mutable y solicitar la reconstrucción de la interfaz cuando dicho estado cambia. Los widgets sin estado, por el contrario, no almacenan información mutable propia y su apariencia depende únicamente de los datos que reciben.
+
+<br>
 
 ### **El árbol de Widgets**
 
@@ -252,11 +262,11 @@ El funcionamiento de este programa es el siguiente:
   
 - Dentro del `main` se invoca a `runApp`, que es quien se encarga de ejecutar la aplicación Flutter.
   
-- La función `runApp` recibe como único argumento un objeto de tipo *Widget*, que será el principal uso de la aplicación, el que debe renderizar. En este caso se trata de un `Text`, con el contenido *Hola Mundo* (primer argumento posicional), y que se muestra de izquierda a derecha (argumento opcional con nombre *textoDirection* con valor `TextDirection.ltr`). Sin este argumento con nombre, nos da el siguiente error porque no sabe cómo renderizar el texto:
+- La función `runApp` recibe como único argumento un objeto de tipo *Widget*, que será el widget principal de la aplicación, el que debe renderizar. En este caso se trata de un `Text`, con el contenido *Hola Mundo* (primer argumento posicional), y que se muestra de izquierda a derecha (argumento opcional con nombre *textDirection* con valor `TextDirection.ltr`). Sin este argumento con nombre, nos da el siguiente error porque no sabe cómo renderizar el texto:
 
 ![No Directionaly](./images/imagen7.png)
 
-Observamos que el widget `Text` se ha definido como constante, con `const`. En caso de no hacerlo así se nos mostraría el aviso *Prefer const with constante constructores*. En Flutter, los widgets que no van a ser modificados durante la ejecución (en este caso se trata de un texto creado directamente a partir de una cadena), conviene definirlos como constantes. De esta manera, indicamos a Flutter que un widget o un subárbol del árbol de widgets no debe reconstruirse, **mejorando así la eficiencia en el renderizado**.
+Observamos que el widget `Text` se ha definido como constante, con `const`. En caso de no hacerlo así se nos mostraría el aviso *Prefer const with constante constructores*. En Flutter, los widgets que no van a ser modificados durante la ejecución (en este caso se trata de un texto creado directamente a partir de una cadena), conviene definirlos como constantes. De esta manera, indicamos a Flutter que el widget es inmutable y puede reutilizar instancias constantes cuando sea posible, reduciendo trabajo innecesario, **mejorando así la eficiencia en el renderizado**.
 
 La aplicación que hemos creado muestra el texto de *hola mundo* en la parte superior izquierda, por lo que, si lo ejecutamos desde un dispositivo móvil, aparece bajo la barra de notificaciones del sistema:
 
@@ -368,7 +378,7 @@ Observamos también que este método recibe un argumento `context` de tipo `Buil
 
 Cuando hablamos del contexto en general hacemos referencia a la situación en que ocurre cierto acontecimiento. En Android, por ejemplo, este hace referencia al estado actual de una aplicación u objeto, a partir del cual podemos obtener cierta información sobre la aplicación, y nos permite acceder a determinados recursos, bases de datos o preferencias.
 
-En Flutter, el `BuildContext` literalmente sería el *contexto de construcción*, es decir, el estado de la aplicación en el momento de construir el widget. Este estado viene representado por el camino en el árbol desde la raíz hasta el *nodo* que estamos creando, de manera que, mediante este camino, podemos obtener datos de los nodos superiores.
+En Flutter, el `BuildContext` literalmente sería el *contexto de construcción*, es decir, la información que identifica la ubicación actual del widget dentro del árbol. Este estado viene representado por el camino en el árbol desde la raíz hasta el *nodo* que estamos creando, de manera que, mediante este camino, podemos obtener datos de los nodos superiores.
 
 <hr>
 
@@ -436,7 +446,7 @@ Nos creará un constructor en nuestro widget con una clave opcional:
 const MyApp({super.key});
 ```
 
-Esta clave se utilizará con el fin de identificar de manera más eficiente el widget dentro del árbol, de forma parecida a como se usaría un *id* en las vistas de Kotlin o en HTML.
+La clave permite a Flutter identificar widgets durante las reconstrucciones del árbol y decidir cuándo debe reutilizar su estado o cuándo debe crear uno nuevo.
 
 Esta nueva corrección nos generará otro aviso de tipo *Prefer const with constant constructors*, que ya conocemos, y que nos sugiere que, dado que el widget MyApp no sufrirá cambios durante la ejecución del programa, lo definimos como constante.
 
@@ -524,7 +534,7 @@ Por ejemplo, vamos a hacer un widget sin estado muy sencillo, en el que definimo
 
 ```dart
 class MiWidgetPersonalizado extends StatelessWidget {
-  final String? propiedadTexto;
+  final String propiedadTexto;
 
   const MiWidgetPersonalizado({required this.propiedadTexto, super.key});
 
@@ -537,7 +547,7 @@ class MiWidgetPersonalizado extends StatelessWidget {
 
 Observemos que la variable `propiedadTexto` se ha definido como `final`, para poder definir al constructor como constante, de manera que el renderizado sea más eficiente. Si esta propiedad pudiera variar en el futuro, no podríamos definirla como `final` y el constructor no se podría definir como `const`. 
 
-Veamos también que la propiedad `propiedadTexto` se inicializa en el propio constructor, de forma simplificada, y como argumento con nombre, junto con la clave (`key`) del widget, y que se nos incorpora automáticamente si generamos el widget a partir de los *snippets*. Aunque es posible eliminar la clave del constructor, Flutter nos recomienda siempre utilizar una.
+Veamos también que la propiedad `propiedadTexto` se inicializa en el propio constructor, de forma simplificada, y como argumento con nombre, junto con la clave (`key`) del widget, y que se nos incorpora automáticamente si generamos el widget a partir de los *snippets*. Aunque la mayoría de widgets no necesitan una clave explícita, es recomendable incluir el parámetro key en widgets personalizados para facilitar su reutilización cuando sea necesario.
 
 Con el fin de hacer uso de este widget, simplemente invocaríamos a su constructor tantas veces como fuera necesario, proporcionándole el valor de la propiedad. Por ejemplo, para incorporar un par de widgets en forma de columna, haríamos:
 
@@ -550,7 +560,7 @@ Column(
 )
 ```
 
-Como veis, sólo hay que proporcionar la propiedad `propiedadTexto`. La clave `key` será generada por el propio Flutter en función del tipo del widget y otros factores. 
+Como veis, sólo hay que proporcionar la propiedad `propiedadTexto`. 
 
 Si lo deseamos, también podemos proporcionar nosotros esta clave, mediante el constructor Key y proporcionándole un string:
 
@@ -872,7 +882,7 @@ Si ahora volvemos a ejecutar nuestro programa veremos cómo, aunque el mensaje d
 
 ### **Widgets con estado y sin estado**
 
-Este comportamiento se debe a que hemos hecho uso de un widget sin estado (`HomeScreen` hereda de `StatelessWidget`), y tal y como comentamos en la introducción, los widgets sin estado no tienen la capacidad de redibujarse por ellos mismos.
+Este comportamiento se debe a que hemos hecho uso de un widget sin estado (`HomeScreen` hereda de `StatelessWidget`), y tal y como comentamos en la introducción, los widgets sin estado no mantienen un estado mutable propio y no pueden solicitar reconstrucciones mediante `setState`.
 
 La solución es hacer uso de un widget con estado, de manera que éste se pueda redibujar con cada modificación.
 
@@ -963,6 +973,8 @@ onPressed: () {
 }
 ```
 
+Aunque es posible modificar el estado antes de llamar a setState, se recomienda realizar las modificaciones dentro de la función proporcionada a setState para que quede claro qué cambios provocan la reconstrucción, tal y como hemos hecho en el ejemplo anterior a este.
+
 ### En resumen
 
 En este apartado, hemos visto de forma práctica cómo crear un proyecto nuevo con un sencillo texto centrado de *Hola Mundo*, y lo hemos ido modificando hasta convertirlo en un contador parecido al que aparece en la aplicación predeterminada.
@@ -1003,11 +1015,11 @@ Con esto, y a pesar de no haber entrado aún en profundidad con los widgets, hem
 
 Como ya hemos visto, los widgets son los elementos principales para la composición de interfaces de usuario en Flutter.
 
-Formalmente, un *widget* se puede definir como una *descripción inmutable* de una parte de la interfaz de usuario que se infla (`inflate`) o cuando se afianza en el árbol de widgets. Este árbol será mantenido por el propio framework, que se encargará de realizar las correspondientes actualizaciones y el correspondiente renderizado en pantalla. Recordemos el principio de las interfaces declarativas: Nosotros decimos el *Qué* y el framework determina el *Cómo*.
+Formalmente, un *widget* se puede definir como una *descripción inmutable* de una parte de la interfaz de usuario que se incorpora al árbol de widgets. Este árbol será mantenido por el propio framework, que se encargará de realizar las correspondientes actualizaciones y el correspondiente renderizado en pantalla. Recordemos el principio de las interfaces declarativas: Nosotros decimos el *Qué* y el framework determina el *Cómo*.
 
-Hay que decir también que un widget se puede instanciar (inflar) varias veces, de manera que se puede añadir también varias veces al árbol de widgets. **Será la propiedad clave (`key`) quien controle estos widgets dentro del árbol.**
+Hay que decir también que un widget se puede instanciar (inflar) varias veces, de manera que se puede añadir también varias veces al árbol de widgets. **Cuando existen varios widgets del mismo tipo, Flutter puede utilizar las claves (Key) para identificarlos correctamente durante las reconstrucciones del árbol y preservar su estado cuando sea necesario.**
 
-Las propiedades de los widgets se definen como propiedades finales, por lo que serán inmutables. Esto hace que sean ligeros y fáciles de gestionar por parte de Flutter. Sin embargo, podemos asociar un estado (*State*) que sí es mutable a un widget cuando éste se inserta en el árbol de widgets. En este caso, estaremos definiendo un widget de tipo *StatefulWidget*, y Flutter se encargará de su redibujado cuando notifiquemos los cambios de estado.
+Las propiedades de los widgets se definen como propiedades finales, por lo que serán inmutables. Esto hace que sean ligeros y fáciles de gestionar por parte de Flutter. Sin embargo, podemos asociar un estado (*State*) que sí es mutable a un widget cuando éste se inserta en el árbol de widgets. En este caso, estaremos definiendo un widget de tipo *StatefulWidget*, y Flutter se encargará de reconstruirlo y actualizar la representación en pantalla cuando sea necesario.
 
 En este apartado, vamos a ver cuál es el ciclo de vida de estos widgets y sobre todo de su estado, para entender mejor su funcionamiento.
 
@@ -1034,7 +1046,7 @@ El ciclo de vida de este tipo de widget podría representarse de la siguiente fo
 
 El ciclo de vida del widget se inicia con su constructor, al que se le pueden proporcionar argumentos. Una vez creado, y **cuando éste se introduce en el árbol de widgets** se invoca al método `build()`, heredado de `StatelessWidget`, y que sobreescribiremos para establecer su diseño.
 
-Una vez creado, éste no se destruye, sino que se vuelve a dibujar invocando de nuevo al método `build()` cada vez que sea necesario, generalmente, cuando un nodo ascendente del árbol de widgets debe redibujarse.
+Cuando Flutter necesita reconstruir una parte de la interfaz, puede volver a invocar el método build para obtener una nueva descripción del árbol de widgets. Los widgets son objetos ligeros e inmutables cuya creación resulta muy económica.
 
 ## El ciclo de vida de un StatefulWidget
 
@@ -1051,7 +1063,7 @@ class name extends StatefulWidget {
 
 Vemos que se trata de un widget con estado porque desciende de la clase `StatefulWidget`, lo que indica que contiene un estado mutable. El constructor, al igual que los widgets con estado, para poder referenciarse dentro del árbol de widgets, tendrá también una propiedad que será la clave (`key`).
 
-Esta clase sobreescribe el método `createState()` de la clase `StatefulWidget`. Este método es invocado por el framework cuando el widget se inserta por primera vez en el árbol de widgets, creando así una instancia del estado `_nameState`. Con ello, **cada vez que se redibuje el widget, el framework reutilizará esta instancia**, de manera que no se pierda el estado. 
+Esta clase sobreescribe el método `createState()` de la clase `StatefulWidget`. Este método es invocado por el framework cuando el widget se inserta por primera vez en el árbol de widgets, creando así una instancia del estado `_nameState`. Con ello, **mientras el widget permanezca asociado a la misma posición lógica dentro del árbol, Flutter reutilizará la misma instancia de State.**
 
 Podríamos representar pues el ciclo de vida de un widget con estado de forma muy parecida a un widget sin estado:
 
@@ -1083,14 +1095,14 @@ Contrastamos ambos ciclos de vida:
 
 1. El ciclo de vida del estado comienza con la invocación de su constructor al método `createState` del widget asociado. Como el widget no está todavía en el árbol, no deberíamos realizar ahí las inicializaciones que dependan del contexto (Recordemos que el contexto de construcción viene determinado por la posición del widget en el árbol).
 1. Se lanza el método `initState`, donde generalmente se llevan a cabo operaciones de inicialización de datos o se obtienen éstas desde fuentes externas, como una base de datos o la red. Cuando sobreescribimos este método, deberemos invocar al constructor de su superclase, para que lleve a cabo tareas de inicialización. Este método se ejecutará sólo una vez.
-1. El método `didChangeDependencies` se invoca una vez, inmediatamente después de `initState`. Este método se volverá a lanzar únicamente cuando se vaya a hacer alguna inicicalización donde intervenga un widget de tipo `InheritedWidget`. En este punto, Flutter marca este widget con el flag *dirty=true*, para indicar que necesita reconstruirse.
-1. Si se necesita una reconstrucción del widget (*dirty=true*), se invoca el método `build()` para determinar los widgets que deberá renderizar nuestro widget. Después de eso, el estado se marca como limpio, con *dirty=false*.
+2. El método `didChangeDependencies`. Este método se ejecuta después de `initState` y volverá a invocarse cuando cambie alguna dependencia obtenida a través de un `InheritedWidget`. En este punto, Flutter marca el widget para su reconstrucción..
+3. Si se necesita una reconstrucción del widget, se invoca el método `build()` para determinar los widgets que deberá renderizar nuestro widget. 
 
 En este punto ya tenemos el widget insertado en el árbol y renderizado según a su estado, de manera que se considera que el widget está *limpio*. A partir de este momento pueden pasar varias cosas que vuelven a establecer este *flag* como *dirty* y que implican una reconstrucción del mismo:
 
 - 5a. **Si ocurre algún acontecimiento (como un click en un botón) que modifique el estado**, se invoca al método `setState()`, que vuelve a marcar el estado con *dirty=true*, para que se reconstruya en el método build, proporcionándole el estado actualizado.
-- 5b. **Si un widget ascendente pide que se reconstruya su descendencia y eso implica el widget anterior** como argumento y marcando el estado como sucio, para que se reconstruya de nuevo.
-- 5c. **Si el widget depende de un *InheritedWidget* y este widget heredado cambia**, se invoca al método didChangeDependencies, reconstruyendo también el widget. Los widget heredados serían un tercer tipo de widget, que permite a un varón descendente acceder directamente a su estado, sin necesidad de ir ascendiendo en el árbol de widgets hasta llegar a él.
+- 5b. Si un widget ancestro se reconstruye y Flutter determina que este widget también debe actualizarse, volverá a ejecutarse el método `build`.
+- 5c. **Si el widget depende de un *InheritedWidget* y este widget heredado cambia**, se invoca al método didChangeDependencies, reconstruyendo también el widget. Los widget heredados serían un tercer tipo de widget, que permite a un widget descendiente acceder directamente a su estado, sin necesidad de ir ascendiendo en el árbol de widgets hasta llegar a él.
 - 6a. Si el widget no se utilizará más, se invoca a `dispose` para destruirlo. En este método se deberán deternir las animaciones, cerrar conexiones, etc. 
 
 
@@ -1102,7 +1114,7 @@ Como hemos visto, los *widgets* son los componentes principales de diseño en Fl
 
 Podemos encontrar el catálogo de widgets de Flutter en el siguiente enlace:
 
-- [Catálogo de Widgets de Flutter](https://docs.flutter.dev/development/ui/widgets)
+- [Catálogo de Widgets de Flutter](https://docs.flutter.dev/ui/widgets)
 
 En esta documentación, podemos encontrar tanto el catálogo de widgets como la sección del *Widget of the week*, donde se nos presentan semanalmente diferentes widgets mediante vídeos cortos y prácticos.
 
@@ -1112,13 +1124,13 @@ El catálogo de widgets está ordenado en las siguientes secciones:
 - **Animation and Motion**: Con widgets para añadir animaciones y dotar de movimiento a las aplicaciones,
 - **Assets, Images and Icons**: Con widgets para mostrar imágenes e iconos
 - **Async**: Con widgets que responden a patrones asíncronos,
-- **Basicos**: Con los widgets principales y de uso más habitual,
+- **Básicos**: Con los widgets principales y de uso más habitual,
 - **Cupertino**: Con widgets del estilo de iOS,
 - **Input**: Con widgets para tomar la entrada del usuario,
 - **Interaction Models**: Con widgets que gestionan la interacción con el usuario,
 - **Layout**: Con widgets de tipo contenedor para ordenar los elementos en la pantalla,
-- **Material 2 Componentes**: Con los widgets correspondientes a las especificaciones y guíes de Material 2,
-- **Material Componentes**: Con los widgets, comportamiento y aspecto visual especificados en las guíes de Material 3 (predeterminadas desde la versión 3.16),
+- **Material 2 Componentes**: Con los widgets correspondientes a las especificaciones y guías de Material 2,
+- **Material Componentes**: Con los widgets, comportamiento y aspecto visual especificados en las guías de Material 3 (predeterminadas desde la versión 3.16),
 - **Painting and effects**: Para aplicar efectos dentro de un widget,
 - **Scrolling**: Con widgets para aplicar scroll entre los widgets hijos de otro,
 - **Styling**: Con widgets para gestionar el aspecto visual de nuestra aplicación,
@@ -1191,12 +1203,12 @@ Vemos algunas propiedades que nos pueden ser de utilidad:
 
 - `overflow`: Se trata de una propiedad de tipo `TextOverflow`, que sirve para determinar qué hacer cuando el texto no cabe en el contenedor donde se encuentra. Este tipo `TextOverflow` es un enumerado (*enum*), con los posibles valores `clip` (recorta el contenido sobrante), `ellipsis` (puntos suspensivos), `fade` (recorta el contenido sobrante de forma difuminada) o `visible` (hace visible el contenido).
   
-- `textAlign`: Para determinar la alineación del texto, mediante el tipo enumerado `TextAlign`, que admite los valores `center` (centrado), `end` (final), `start` (inicio), `left` (izquierda), `right` (derecha) o `justified` (justificado). El hecho de distinguir entre *start/left* y *end/right* es para adaptar los textos a los sistemas de escritura de derecha a izquierda.
+- `textAlign`: Para determinar la alineación del texto, mediante el tipo enumerado `TextAlign`, que admite los valores `center` (centrado), `end` (final), `start` (inicio), `left` (izquierda), `right` (derecha) o `justify` (justificado). El hecho de distinguir entre *start/left* y *end/right* es para adaptar los textos a los sistemas de escritura de derecha a izquierda.
   
 - `style`: Para determinar el estilo del texto, mediante un widget de tipo `TextStyle`. Este widget admite una gran cantidad de atributos, entre los que podemos destacar:
   - `color`: Para establecer el color del texto. Es un atributo del tipo `Color`, un valor de 32 bits expresado en formato ARGB (*Alpha-Red-Green-Blue*). Podemos expresar este color de diversas formas:
-    - Directamente, en formato hexadecimal con `const Color(0xAARRGGBB)`, siendo *AA, RR, GG y BB*, respectivamente las cuantidades de transparencia (*Alpha*), Roig (*Red*), Verde (*Green*) y Azul (*Blue*). Por ejemplo, para un color azul sin transparencia: `const Color(0xFF42A5F5)`.
-    - Haciendo uso del constructor `fromARGB`, y especificando las cantidades en decimal (de 0 a 254). Por ejemplo, para el mismo azul: `const Color.fromARGB(255, 66, 165, 245)`;
+    - Directamente, en formato hexadecimal con `const Color(0xAARRGGBB)`, siendo *AA, RR, GG y BB*, respectivamente las cuantidades de transparencia (*Alpha*), Rojo (*Red*), Verde (*Green*) y Azul (*Blue*). Por ejemplo, para un color azul sin transparencia: `const Color(0xFF42A5F5)`.
+    - Haciendo uso del constructor `fromARGB`, y especificando las cantidades en decimal (de 0 a 255). Por ejemplo, para el mismo azul: `const Color.fromARGB(255, 66, 165, 245)`;
     - Haciendo uso del enumerado `Colors`, definido en Material, y que contiene colores predefinidos, como `Colors.amber`, `Colors.blue`, etc.
   - `backgroundColor`: Con el color de fondo para el texto, también con un valor de tipo `Color`.
   - `fontSize`: Con el tamaño de la letra, expresada en píxeles lógicos,
@@ -1238,6 +1250,14 @@ Todos estos proveedores podrán utilizarse para especificar el valor de la propi
 const Image(
   image: NetworkImage('https://picsum.photos/500')
   );
+```
+
+Suele utilizarse en muchas ocasiones así:
+
+```dart
+Image.network(
+  'https://picsum.photos/500',
+)
 ```
 
 ```dart
@@ -1289,7 +1309,7 @@ IconButton(
 
 ### **El widget ElevatedButton**
 
-El widget `ElevatedButton` se encuentra definido en las librerías de Material, y representa un botón con elevación, de uso común en widgets que presentan un estilo más plano.
+El widget `ElevatedButton` se encuentra definido en las librerías de Material, y representa el botón principal recomendado por Material Design para destacar acciones importantes.
 
 El constructor de la clase `ElevatedButton` requiere al menos de dos parámetros con nombre:
 
@@ -1481,7 +1501,7 @@ En *el siguiente gist* podéis encontrar este código funcionando:
 <br>
 <br>
 
-# <a name="_apartado5"></a>5. Widgets básicos. Contenedores y diseños
+# <a name="_apartado5"></a>5. Contenedores y sistemas de diseño (Layouts)
 
 Flutter ofrece muchísimos widgets para organizar el contenido. 
 
@@ -1532,13 +1552,14 @@ En *el siguiente gist* podéis encontrar este código funcionando:
 
 ### EdgeInsets
 
-En el ejemplo anterior hemos utilizado un widget `EdgeInsets` para especificar las propiedades `padding` y `margin` del contenedor. Como podemos intuir, este widget sirve para especificar desplazamientos en términos de los ejes visuales: `left`, `top`, `right`, y `bottom`. Si queremos respetar el sentido de la escritura, podemos hacer uso de `EdgeInsetsDirectional`, que hace uso de `start`, `top`, `end`, y `bottom`. Podemos especificar todos los ejes con `EdgeInsets.all`, ejes simétricos con `EdgeInsets.symetric`, o sólo un eje con `EdgeInsets.only`.
+En el ejemplo anterior hemos utilizado un widget `EdgeInsets` para especificar las propiedades `padding` y `margin` del contenedor. Como podemos intuir, este widget sirve para especificar desplazamientos en términos de los ejes visuales: `left`, `top`, `right`, y `bottom`. Si queremos respetar el sentido de la escritura, podemos hacer uso de `EdgeInsetsDirectional`, que hace uso de `start`, `top`, `end`, y `bottom`. Podemos especificar todos los ejes con `EdgeInsets.all`, ejes simétricos con `EdgeInsets.symmetric`, o sólo un eje con `EdgeInsets.only`.
 
 <br>
 
 ### SizedBox
 
-Se trata de una caja con unas dimensiones específicas, determinadas por las propiedades `width` y `height`, y que puede contener además un elemento hijo (`child`) que se adaptará a estas dimensiones. Algunos widgets, como puedan ser la pantalla de la aplicación o los propios SizedBox obligan a los hijos a ocupar todo el espacio disponible, por lo que un SizedBox que esté ubicado directamente en la pantalla o dentro de otro SizedBox ignorará estos valores de alto y ancho. 
+Se trata de una caja con unas dimensiones específicas, determinadas por las propiedades `width` y `height`, y que puede contener además un elemento hijo (`child`) que se adaptará a estas dimensiones. Algunos widgets, como puedan ser la pantalla de la aplicación o los propios SizedBox obligan a los hijos a ocupar todo el espacio disponible.
+El tamaño real de un SizedBox depende también de las restricciones que le impongan sus widgets ancestros. En determinadas situaciones, estas restricciones pueden provocar que los valores de width o height no se respeten exactamente. 
 
 El siguiente código, por ejemplo, crea un *SizedBox* de 300x300 de color rojo, y dentro de uno de 20x20 de color azul. Como podemos ver, estas dimensiones de 20x20 son ignoradas, y el *SizedBox* de dentro ocupa todo el espacio posible del padre.
 
@@ -1570,7 +1591,7 @@ Otros widgets de este tipo son:
 
 - **Center**: Como ya hemos visto, se trata de un widget que centra a su hijo dentro de él. En principio, este widget se expande a todo el contenido de su padre. 
   
-- **Expanded**: Se trata de un widget utilizado dentro de otros widgets de tipo Row, Column o Flex de manera que se expande con el fin de ocupar todo el espacio disponible a lo largo del eje principal (horizontal para una fila y vertical para una columna). Si existen varios widgets *Expanded* dentro del mismo Row o Column, el espacio disponible se distribuye entre ellos en función de un valor *flex*.
+- **Expanded**: Se trata de un widget utilizado dentro de otros widgets de tipo Row, Column o Flex de manera que se expande con el fin de ocupar todo el espacio disponible a lo largo del eje principal (horizontal para una fila y vertical para una columna). Si existen varios widgets *Expanded* dentro del mismo Row o Column, el espacio disponible se distribuye entre ellos en función de un valor *flex*. *Expanded* solo puede utilizarse como descendiente de *Row*, *Column* o *Flex*.
   
 - [Referència de la classe Center](https://api.flutter.dev/flutter/widgets/Center-class.html)
 - 
@@ -1608,6 +1629,26 @@ Column(                                                     // (1)
 
 ![Row y Column](./images/imagen31.png)
 
+```dart
+Center(
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: const [
+      Text('Uno'),
+      Text('Dos'),
+      Text('Tres'),
+    ],
+  ),
+)
+```
+
+- `mainAxisAlignment` organiza los elementos sobre el eje principal del widget.
+En una `Column`, el eje principal es el vertical. `center` centra los elementos verticalmente.
+
+- `crossAxisAlignment` organiza los elementos sobre el eje secundario.
+En una `Column`, el eje secundario es el horizontal. `start` alinea los textos a la izquierda.
+
 <br>
 
 ### ListView
@@ -1624,6 +1665,43 @@ ListView(
 )
 ```
 
+La propiedad `scrollDirection` nos permite hacer la lista desplazable horizontalmente, ya que por defecto lo es verticalmente.
+
+```dart 
+ListView(
+  scrollDirection: Axis.horizontal,
+  children: [
+    Container(
+      width: 150,
+      color: Colors.red,
+      child: const Center(
+        child: Text('Rojo'),
+      ),
+    ),
+    Container(
+      width: 150,
+      color: Colors.green,
+      child: const Center(
+        child: Text('Verde'),
+      ),
+    ),
+    Container(
+      width: 150,
+      color: Colors.blue,
+      child: const Center(
+        child: Text('Azul'),
+      ),
+    ),
+    Container(
+      width: 150,
+      color: Colors.orange,
+      child: const Center(
+        child: Text('Naranja'),
+      ),
+    ),
+  ],
+)
+```
 
 Podéis ver un ejemplo con *Rows*, *Columns* y *Expanded*, junto con el *ListView* en el siguiente Gist: 
 [https://dartpad.dev/embed-flutter.html?id=b9a246da643bf1ab46ab93b78c8e0995](https://dartpad.dev/embed-flutter.html?id=b9a246da643bf1ab46ab93b78c8e0995)
@@ -1767,7 +1845,8 @@ Cuando hacemos uso de contenedores de tipo *Row*, y sobre todo *Column*, que con
 
 ![Overflow](./images/imagen32.png)
 
-Para evitar estas situaciones, podemos hacer uso del widget `SingleChildScrollView` para rodear un widget contenedor, como pueda ser un `Row` o un `Column`. Este widget proporcionará la capacidad de desplazamiento de que no disponen el *Row* o el *Column*. Podríamos decir que la combinación de `SingleChildSCrollView` y el widget `Column` podría ser equivalente a un `ListView
+Para evitar estas situaciones, podemos hacer uso del widget `SingleChildScrollView` para rodear un widget contenedor, como pueda ser un `Row` o un `Column`. Este widget proporcionará la capacidad de desplazamiento de que no disponen el *Row* o el *Column*.  
+Podríamos decir que la combinación de `SingleChildSCrollView` y el widget `Column` desde el punto de vista visual puede parecer similar a un `ListView`, aunque este último está optimizado para trabajar con grandes cantidades de elementos.
 
 ```dart
 SingleChildScrollView(
@@ -1812,7 +1891,7 @@ Veamos un pequeño ejemplo:
 ```dart
 Divider( 
   height: 100,    // Alto del  divisor. Su valor predeterminado es 16
-  thickness: 13,   // Grueso de la linea divisoria. Su valor predeterminado es 0
+  thickness: 4,   // Grueso de la linea divisoria. Su valor predeterminado es 0
   indent: 150,    // Espacio que se deja por delante
   endIndent: 20,  // Espacio que se deja por detrás
   color: Colors.amber // Color de la línea
@@ -1908,7 +1987,7 @@ El widget `CircleAvatar` de la librería Material nos proporciona un contenedor 
 Algunas de las principales propiedades de este widget son:
 
 - `radius`: Para especificar el tamaño (el radio) del círculo. Su valor predeterminado es de 20 píxeles lógicos.
-- `ForegroundImage`: Especifica la imagen de primer plano. Si esta no se indica, se hace uso de backgroundImage.
+- `foregroundImage`: Especifica la imagen de primer plano. Si esta no se indica, se hace uso de backgroundImage.
 - `backgroundImage`: Especifica la imagen de fondo. Si no se indica, se utiliza backgroundColor.
 - `backgroundColor`: Especifica el color de fons.
 - `child`: Especifica el widget hijo, generalmente un texto.
@@ -1970,7 +2049,7 @@ GestureDetector(
 
 Hay que tener en cuenta que el constructor del `GestureDetector` no está definido como constante, de manera que no podemos definirlo como `const` o ubicarlos dentro de algún widget declarado también como const.
 
-Por otro lado, este widget, además de detectar *Clicks* puede usarse para detectar otros eventos, como el *Swipe* o el *Drag*.
+Por otro lado, este widget, además de detectar *Tabs* puede usarse para detectar otros eventos, como el *Swipe* o el *Drag*.
 
 [https://api.flutter.dev/flutter/widgets/GestureDetector-class.html](https://api.flutter.dev/flutter/widgets/GestureDetector-class.html)
 
