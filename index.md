@@ -1349,11 +1349,11 @@ Por ejemplo, para cambiar el color del fondo (**backgroundColor**) y del primer 
 
 El uso de este tipo de botones no está recomendado en elementos que ya tengan elevación, como los diálogos, las tarjetas o la propia barra de la aplicación (en Material 2). En estos casos, para mostrar de manera más integrada el botón con el resto de contenido, se recomienda hacer uso del botón TextButton, que se usa de la misma manera, con la diferencia de que no presenta elevación.
 
-- [La classe ElevatedButton](https://api.flutter.dev/flutter/material/ElevatedButton-class.html)
+- [La clase ElevatedButton](https://api.flutter.dev/flutter/material/ElevatedButton-class.html)
   
-- [La classe ButtonStyle](https://api.flutter.dev/flutter/material/ButtonStyle-class.html)
+- [La clase ButtonStyle](https://api.flutter.dev/flutter/material/ButtonStyle-class.html)
   
-- [La classe TextButton](https://api.flutter.dev/flutter/material/TextButton-class.html)
+- [La clase TextButton](https://api.flutter.dev/flutter/material/TextButton-class.html)
 
 <br>
 
@@ -1593,9 +1593,9 @@ Otros widgets de este tipo son:
   
 - **Expanded**: Se trata de un widget utilizado dentro de otros widgets de tipo Row, Column o Flex de manera que se expande con el fin de ocupar todo el espacio disponible a lo largo del eje principal (horizontal para una fila y vertical para una columna). Si existen varios widgets *Expanded* dentro del mismo Row o Column, el espacio disponible se distribuye entre ellos en función de un valor *flex*. *Expanded* solo puede utilizarse como descendiente de *Row*, *Column* o *Flex*.
   
-- [Referència de la classe Center](https://api.flutter.dev/flutter/widgets/Center-class.html)
-- 
-- [Referència de la classe Expanded](https://api.flutter.dev/flutter/widgets/Expanded-class.html)
+- [Referència de la clase Center](https://api.flutter.dev/flutter/widgets/Center-class.html)
+  
+- [Referència de la clas Expanded](https://api.flutter.dev/flutter/widgets/Expanded-class.html)
 
 <br>
 <br>
@@ -1706,15 +1706,6 @@ ListView(
 Podéis ver un ejemplo con *Rows*, *Columns* y *Expanded*, junto con el *ListView* en el siguiente Gist: 
 [https://dartpad.dev/embed-flutter.html?id=b9a246da643bf1ab46ab93b78c8e0995](https://dartpad.dev/embed-flutter.html?id=b9a246da643bf1ab46ab93b78c8e0995)
 
-<div style="overflow-x: auto; width: 100%;">
-  <iframe
-    src="https://dartpad.dev/embed-flutter.html?id=b9a246da643bf1ab46ab93b78c8e0995"
-    width="100%"
-    height="500px"
-    loading="lazy"
-    frameborder="0">
-  </iframe>
-</div>
 
 <br>
 
@@ -1760,6 +1751,198 @@ Como podéis comprobar, la propiedad `itemCount` se establece con la longitud de
 En *el siguiente gist* podemos ver el funcionamiento del widget: 
 [https://dartpad.dev/embed-flutter.html?id=ddd29d915a523e3648f54750585c990d](https://dartpad.dev/embed-flutter.html?id=ddd29d915a523e3648f54750585c990d)
 
+
+<br>
+
+### GridView
+
+El widget `GridView` nos permite mostrar colecciones de elementos en forma de cuadrícula (filas y columnas), con desplazamiento vertical u horizontal. Es la alternativa natural a `ListView` cuando queremos presentar contenido en forma de mosaico, como pueden ser galerías de imágenes, catálogos, paneles de iconos, etc.
+
+De forma similar a `ListView`, podemos construir un `GridView` a partir de una lista de elementos hijos, pero cuando el número de elementos es grande (o potencialmente infinito), nos interesará especialmente el constructor `GridView.builder()`.
+
+Un `GridView` necesita que le indiquemos cómo se organiza la cuadrícula, y esto se hace mediante la propiedad `gridDelegate`, que suele ser alguno de los siguientes delegados:
+
+- `SliverGridDelegateWithFixedCrossAxisCount`: fijamos el número de columnas (si el desplazamiento es vertical) o filas (si el desplazamiento es horizontal).
+  
+- `SliverGridDelegateWithMaxCrossAxisExtent`: fijamos el tamaño máximo de cada celda en el eje transversal, y Flutter calcula cuántas columnas o filas caben.
+
+<hr>  
+
+**¿Qué es un delegate?**
+
+Un delegate en Flutter es un patrón de diseño que consiste en una clase especializada utilizada para delegar responsabilidades de construcción, configuración o lógica de la interfaz de usuario a una clase externa.
+
+<hr>
+
+Veamos un ejemplo sencillo con `SliverGridDelegateWithFixedCrossAxisCount`:
+
+```dart
+GridView(
+  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 3,      // 3 columnas
+    crossAxisSpacing: 8,    // separación horizontal
+    mainAxisSpacing: 8,     // separación vertical
+  ),
+  children: const [
+    Icon(Icons.home, size: 48),
+    Icon(Icons.star, size: 48),
+    Icon(Icons.settings, size: 48),
+    Icon(Icons.person, size: 48),
+    Icon(Icons.map, size: 48),
+    Icon(Icons.camera_alt, size: 48),
+  ],
+)
+```
+
+<hr>
+HAY QUE ARREGLAR
+En el siguiente gist podemos ver este ejemplo en funcionamiento:
+ https://dartpad.dev/?id=571c0c471e2e57d2ef214bad460fc5be
+ 
+<hr>
+
+Nota: Igual que ocurre con `ListView`, si colocamos un `GridView` dentro de un `Column` sin darle una altura determinada (o sin usar `Expanded`), podemos encontrarnos con errores de restricciones **unbounded**.
+
+<br>
+
+### El constructor GridView.builder()
+
+El constructor con nombre `GridView.builder()` es la opción recomendada cuando hay muchos elementos, ya que los crea bajo demanda (lazy build), igual que `ListView.builder()`, mejorando así el rendimiento.
+
+Las propiedades más habituales de este constructor son:
+
+- `itemCount`: el número de elementos (muy recomendable si la colección es finita).
+  
+- `itemBuilder`: función anónima que genera cada elemento según el índice.
+  
+- `gridDelegate`: define la forma de la cuadrícula (es lo que hemos visto antes).
+
+Veamos, por ejemplo, cómo a partir de una lista de cadenas de caracteres podemos generar una cuadrícula de widgets de tipo Text formada por dos columnas:
+
+```dart
+final List<String> items = [
+  "Element 1", "Element 2", "Element 3",
+  "Element 4", "Element 5", "Element 6",
+];
+
+GridView.builder(
+  itemCount: items.length,
+  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 2,
+    crossAxisSpacing: 8,
+    mainAxisSpacing: 8,
+    childAspectRatio: 2.5, // relació ample/alt de cada casella
+  ),
+  itemBuilder: (BuildContext context, int index) {
+    return Container(
+      alignment: Alignment.center,
+      child: Text(items[index]),
+    );
+  },
+);
+```
+
+
+Si, en lugar de fijar el número de columnas, preferimos controlar el **tamaño máximo** de cada celda (esto puede resultar útil en pantallas grandes), podemos usar `SliverGridDelegateWithMaxCrossAxisExtent`:
+
+```dart
+GridView.builder(
+  itemCount: items.length,
+  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+    maxCrossAxisExtent: 220, // cada casella medeix com a molt 220px en l'eix transversal
+    crossAxisSpacing: 8,
+    mainAxisSpacing: 8,
+  ),
+  itemBuilder: (context, index) {
+    return Center(child: Text(items[index]));
+  },
+);
+```
+
+Referencias y documentación adicional
+Referencia de la clase GridView: https://api.flutter.dev/flutter/widgets/GridView-class.html
+Referencia de SliverGridDelegateWithFixedCrossAxisCount: https://api.flutter.dev/flutter/rendering/SliverGridDelegateWithFixedCrossAxisCount-class.html
+Referencia de SliverGridDelegateWithMaxCrossAxisExtent: https://api.flutter.dev/flutter/rendering/SliverGridDelegateWithMaxCrossAxisExtent-class.html
+
+<br>
+
+## Micro-layout y ajustes básicos de componentes
+
+Antes de continuar con el widget `Stack`, vamos a revisar otros widgets que nos ayudan a gestionar el espacio y la alineación. Algunos de ellos, como `Padding`, ya los hemos introducido, pero no hemos profundizado en detalle.
+
+### Spacer
+
+[Spacer](https://api.flutter.dev/flutter/widgets/Spacer-class.html) nos sirve para repartir el espacio sobrante entre los componentes dentro de un contenedor como `Row` o `Column`. Cuando lo utilizamos, conseguimos que los elementos se separen automáticamente.
+
+Veamos un ejemplo:
+
+```dart
+Row(
+  children: <Widget>[
+    Icon(Icons.star),
+    Spacer(),
+    Icon(Icons.settings),
+  ],
+)
+```
+
+<br>
+
+### Align
+
+El widget [Align](https://api.flutter.dev/flutter/widgets/Align-class.html) nos permite colocar un elemento dentro de su contenedor según la alineación deseada (por ejemplo, a la izquierda, a la derecha o centrado).
+
+```dart
+Align(
+  alignment: Alignment.centerRight,
+  child: Icon(Icons.access_alarm),
+)
+```
+
+<br>
+
+### Flexible
+
+A diferencia de Expanded, [Flexible](https://api.flutter.dev/flutter/widgets/Flexible-class.html) nos permite controlar cómo los elementos ocupan espacio dentro del espacio disponible. Esto resulta útil cuando queremos que los elementos ocupen una proporción determinada del espacio, pero sin obligarlos a ocuparlo completamente.
+
+```dart
+Row(
+  children: [
+    Flexible(
+      flex: 2, // Ocupa 2 unidades de espacio
+      child: Container(color: Colors.blue),
+    ),
+    Flexible(
+      flex: 1, // Ocupa 1 unidad de espacio
+      child: Container(color: Colors.red),
+    ),
+  ],
+)
+```
+
+<br>
+
+### Wrap
+
+El widget [Wrap](https://api.flutter.dev/flutter/widgets/Wrap-class.html) es útil para colocar elementos en filas, de forma que cuando ya no hay espacio disponible, los elementos pasan automáticamente a una nueva línea.
+
+Esta funcionalidad es especialmente útil cuando tenemos elementos como los chips (etiquetas o pequeños botones que pueden seleccionarse o utilizarse para clasificar información), que pueden agruparse en líneas y distribuirse automáticamente.
+
+Veamos cómo utilizar este widget Wrap en combinación con el widget [Chip](https://api.flutter.dev/flutter/material/Chip-class.html) para mostrar información compacta y representar opciones seleccionables.
+
+```dart
+Wrap(
+  children: <Widget>[
+    Chip(label: Text('Elemento 1')),
+    Chip(label: Text('Elemento 2')),
+    Chip(label: Text('Elemento 3')),
+    Chip(label: Text('Elemento 4')),
+    Chip(label: Text('Elemento 5')),
+  ],
+)
+```
+
+En este ejemplo, los Chip se distribuirán automáticamente en varias líneas si no hay suficiente espacio en una sola fila. Esto hace que Wrap sea perfecto para mostrar etiquetas, chips de filtrado u otros elementos interactivos.
 
 <br>
 
@@ -2120,6 +2303,9 @@ flutter:
     - graphics/
 ```
 
+En este caso Flutter incorpora ambos recursos al paquete, pero no seleccionará automáticamente la variante dark. Será la aplicación quien decida cuál utilizar.
+
+
 <br>
 
 ### Imágenes adaptables a la resolución
@@ -2128,7 +2314,7 @@ Cuando creamos aplicaciones que puedan ejecutarse en diferentes dispositivos, es
 
 Cuando accedemos a una imagen almacenada en los recursos con `AssetImage`, éste es capaz de determinar qué variante del recurso solicitado se aproxima más a la proporción de píxeles del dispositivo. Para ello, es necesario definir una estructura de directorios particular, que contenga las diferentes variantes de las imágenes a diferentes resoluciones.
 
-Las resoluciones suelen especificarse como múltiplos de un tamaño de referencia, en formato "2x", "3x", etc. Con ello hacemos referencia a que las imágenes que se ubican se utilizarán en pantallas con el doble o triple de densidad que la pantalla de referencia.
+Las resoluciones suelen especificarse como múltiplos de un tamaño de referencia, en formato "2.0x", "3.0x", etc. Con ello hacemos referencia a que las imágenes que se ubican se utilizarán en pantallas con el doble o triple de densidad que la pantalla de referencia.
 
 Veámoslo con un ejemplo práctico. Tenemos la siguiente estructura de ficheros dentro de la carpeta de recursos:
 
@@ -2136,9 +2322,9 @@ Veámoslo con un ejemplo práctico. Tenemos la siguiente estructura de ficheros 
 assets/
 └── images
     ├── logo.png        (dimensions 300x300px)
-    ├── 2x
+    ├── 2.0x
     │   └── logo.png    (dimensions 600x600px)
-    └── 3x
+    └── 3.0x
         └── logo.png    (dimensions 900x900px)
 ```
 
@@ -2183,9 +2369,9 @@ Para ver el resultado, lanzamos la aplicación sobre el *Galaxy 9* que tenemos e
 
 Como vemos, el Galaxy S9 presenta una relación de aspecto con el dispositivo de 3.5, con una resolución de 1440x2792 píxeles físicos. Esto hace que la imagen que se muestre sea el logo con mayor resolución (3x). 
 
-Cuando lanzamos la aplicación sobre el navegador web, o en general sobre el escritorio, los píxeles lógicos y los físicos coincidirán, por eso la ejecución sobre Chrome nos da una relación de aspecto con valor 1, y muestra el logotipo a escala original.
+Cuando lanzamos la aplicación sobre el navegador web, o en general sobre el escritorio, los píxeles lógicos y los físicos coincidirán, por eso la ejecución sobre Chrome nos da devicePixelRatio igual a 1, y muestra el logotipo a escala original.
 
-Por otro lado, si hacemos zoom sobre el navegador y ampliamos un 10%, la relación de aspecto sube al 1.1, y por lo tanto se coge la imagen a resolución 2x, para no ampliar el logotipo original y evitar así el pixelado.
+Al modificar el zoom del navegador puede variar el valor de `devicePixelRatio`, provocando que Flutter seleccione una variante distinta del recurso si considera que es más adecuada.
 
 <br>
 
@@ -2193,11 +2379,11 @@ Por otro lado, si hacemos zoom sobre el navegador y ampliamos un 10%, la relaci�
 
 El hecho de que cada plataforma gestione los lanzadores de la aplicación de una manera particular implica tener que incorporar los iconos para el lanzador en el contenido nativo de cada plataforma (carpeta ios, android, etc).
 
-No obstante, disponemos del paquete `flutter_launch_icons`, que nos facilita esta tarea, y nos genera los iconos según una configuración preestablecida para cada sistema.
+No obstante, disponemos del paquete `flutter_launcher_icons`, que nos facilita esta tarea, y nos genera los iconos según una configuración preestablecida para cada sistema.
 
 Para utilizar este paquete, seguiremos los siguientes pasos:
 
-- **Paso 1**. Añadimos la dependencia de desarrollo del paquete `flutter_launch_icons`, de la siguiente manera:
+- **Paso 1**. Añadimos la dependencia de desarrollo del paquete `flutter_launcher_icons`, de la siguiente manera:
 
 ```
 flutter pub add dev:flutter_launcher_icons
@@ -2224,7 +2410,7 @@ Esta configuración puede bien incluirse en el mismo pubspec.yaml de nuestro pro
 
 Si no deseamos crear este fichero manualmente, podemos hacer uso de la orden:
 ```
-flutter pub run flutter_launcher_icons:generate
+dart run flutter_launcher_icons
 ```
 
 Una posible adaptación de la configuración propuesta, siguiendo la ubicación de los assets que teníamos podría ser:
@@ -2379,7 +2565,7 @@ Center(
               fontFamily: 'Lato',
               fontWeight: FontWeight.w500,
               fontSize: 30),
-      ),
+        ),
     ],
     ),
  ),
@@ -2391,7 +2577,7 @@ Center(
 
 # <a name="_apartado7"></a>7. Trabajando con temas
 
-Hasta ahora, las aplicaciones que hemos generado o los ejemplos que hemos visto hacen uso del estilo o tema predeterminado de Flutter. Este tema, hasta Flutter 3.16 se basaba en Material 2, y se correspondía a un tema con tonalidades azules. A partir de Flutter 3.16, y el paso a Material 3, el tema predeterminado cambia a un nuevo conjunto de colores, fuentes e iconos, llamado *Tonal System*.
+Hasta ahora, las aplicaciones que hemos generado o los ejemplos que hemos visto hacen uso del estilo o tema predeterminado de Flutter. Este tema, Hasta Flutter 3.16 las nuevas aplicaciones utilizaban Material 2 de forma predeterminada, y se correspondía a un tema con tonalidades azules. A partir de Flutter 3.16, y el paso a Material 3, el tema predeterminado cambia a un nuevo conjunto de colores, fuentes e iconos, llamado *Tonal System*.
 
 La tematización de nuestras aplicaciones, a través de la creación de temas personalizados, mediante un conjunto de colores y fuentes, hacen que éstas se muestren más atractivas y coherentes con la marca de la empresa o el producto que se quiere mostrar. Además, el nuevo Tonal System ofrece más posibilidades de personalización, ya que permite elegir colores, fuentes e iconos independientemente.
 
@@ -2408,7 +2594,7 @@ La clase `ThemeData` es la clase que usa Flutter para definir los temas de la ap
 
 Cuando definimos una aplicación `MaterialApp`, ésta admite en el constructor un parámetro `theme`, de tipo `ThemeData` con el tema a utilizar. Si no se especifica un `theme`, hará uso del tema predeterminado.
 
-El tema predeterminado de Material 3 es un tema dinámico, lo que significa que los colores del tema se adaptan al fondo del dispositivo. Por ejemplo, si el fondo del dispositivo es oscuro, los colores del tema serán más claros, y si el fondo es claro los colores del tema serán oscuros.
+Material 3 facilita la generación de esquemas de color armonizados a partir de un color semilla (seed color). Además, en algunas plataformas como Android 12 o superior es posible utilizar colores dinámicos obtenidos del sistema. Por ejemplo, si el fondo del dispositivo es oscuro, los colores del tema serán más claros, y si el fondo es claro los colores del tema serán oscuros.
 
 
 ### **Definiendo un tema**
@@ -2464,36 +2650,72 @@ MaterialApp(
 
 De esta manera, hemos cogido el tema *`light()`* como base y lo hemos copiado, con las modificaciones que proporcionamos como arumento dentro del método *`copyWith()`.*
 
-### **Utilización de muestras: PrimarySwatch**
+### Generación de esquemas de color
 
-Los componentes de Material hacen uso de las propiedades [*colorScheme*](https://api.flutter.dev/flutter/material/ColorScheme-class.html) (esquema de color) y *textTheme* para calcular los valores predeterminados para su aspecto visual.
+Los componentes de Material 3 hacen uso principalmente de las propiedades https://api.flutter.dev/flutter/material/ColorScheme-class.html (esquema de color) y `TextTheme` para determinar su apariencia visual. Por este motivo, en las versiones actuales de Flutter es recomendable definir los colores de la aplicación mediante un esquema de color completo, en lugar de establecer únicamente un color principal.
 
-Para proporcionar un esquema de color, podemos, bien proporcionarlo directamente, o generar un esquema a partir de una semilla, mediante los parámetros *colorSchemeSeed* y *brightness*. Cuando hacemos uso de estas propiedades, se genera un esquema de color basado en las tonalidades establecidas, de manera que las combinaciones de colores tengan un contraste adecuado y cumplan con las pautas de accesibilidad. Para personalizar un esquema de color, podemos hacer uso del constructor [ColorScheme.fromSeed](https://api.flutter.dev/flutter/material/ColorScheme/ColorScheme.fromSeed.html), y luego realizar los ajustes que deseamos con `copyWith`.
+La forma más sencilla de generar un esquema de color consiste en utilizar un color semilla (seed color). A partir de este color, Flutter genera automáticamente una paleta coherente de colores primarios, secundarios y de superficie que mantiene un contraste adecuado y cumple con las pautas de accesibilidad de Material Design.
 
-Una manera más sencilla de hacerlo, aunque puede no ser tan completa, es proporcionar una muestra para construir el esquema de colores a partir de una muestra (Swatch).
-
-Por ejemplo, para aplicar ahora el color *amber* que habíamos definido como color para la barra de la aplicación, como muestra de color principal en toda la aplicación, podríamos hacer:
+Para ello podemos utilizar la propiedad colorSchemeSeed al crear un objeto ThemeData:
 
 ```dart
 MaterialApp(
-    ...
-    theme: ThemeData(
-        primarySwatch: Colors.amber,
-        ...
-      ),
-    home: /*...*/,
+  theme: ThemeData(
+    colorSchemeSeed: Colors.amber,
+  ),
+  home: /* ... */,
 );
 ```
 
-Con ello, no sólo hemos modificado el color de fondo para la barra de la aplicación, sino también el color principal de los widgets. De esta manera se utilizan diferentes tonalidades del color principal en función del estado del widget. Además, también se generarán el resto de colores de manera que contrastan con este color principal. Por ejemplo, sin haber indicado nada, el color del título de la barra de la aplicación y los widgets, cambiarán a un color más oscuro.
+De esta manera, Flutter generará automáticamente un esquema completo de colores basado en el color amber, que será utilizado por los diferentes componentes de la interfaz, como botones, barras de aplicación, menús, tarjetas o campos de texto.
 
-Otra forma de hacer uso de una semilla para generar el esquema de colores, también puede ser hacer uso del parámetro colorSchemeSeed a la hora de definir el ThemeData:
+Si deseamos un mayor control sobre el esquema de colores, podemos construirlo explícitamente mediante el constructor ColorScheme.fromSeed:
 
 ```dart
 ThemeData(
-  colorSchemeSeed:  Colors.amber[50]
-);
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: Colors.amber,
+  ),
+)
 ```
+
+Además, podemos modificar algunas propiedades concretas del esquema generado mediante el método copyWith:
+
+```dart
+ThemeData(
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: Colors.amber,
+  ).copyWith(
+    primary: Colors.deepOrange,
+  ),
+)
+```
+
+También podemos indicar si deseamos un tema claro u oscuro mediante la propiedad brightness:
+
+```dart
+ThemeData(
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: Colors.amber,
+    brightness: Brightness.dark,
+  ),
+)
+```
+
+Con ello se generará automáticamente una versión oscura del esquema de color manteniendo la coherencia cromática del tema.
+
+**Nota sobre Material 2**
+
+En versiones anteriores de Flutter era habitual utilizar la propiedad primarySwatch para generar el tema a partir de un color principal:
+
+```dart
+ThemeData(
+  primarySwatch: Colors.amber,
+)
+```
+
+Aunque esta opción sigue estando disponible por compatibilidad, en aplicaciones modernas basadas en Material 3 se recomienda utilizar `colorSchemeSeed` o `ColorScheme.fromSeed`, ya que permiten generar esquemas de color más completos y adaptados a las directrices actuales de Material Design.
+
 
 ### Tipos de fuentes
 
@@ -2521,7 +2743,7 @@ Para mantener el código lo más limpio posible, podemos definir los temas de ma
 Por ejemplo, definiríamos el tema como:
 
 ```dart
-ThemeData TemaPersonalizado = ThemeData(
+ThemeData temaPersonalizado = ThemeData(
   primarySwatch: Colors.amber,
   scaffoldBackgroundColor: Colors.yellow,
   fontFamily: 'Lato',
@@ -2538,7 +2760,7 @@ Y hacer uso de él cuando definimos la aplicación Material:
 ```dart
 MaterialApp(
     title: 'Ejemplo de tema',
-    theme: TemaPersonalizado,
+    theme: temaPersonalizado,
     home: /*...*/,
 );
 ```
@@ -2547,7 +2769,7 @@ Por otro lado, si queremos aplicar el tema a un widget concreto, por ejemplo a u
 
 ```dart
 Theme(
-    data: TemaPersonalizado,
+    data: temaPersonalizado,
     child: ElevatedButton(
         onPressed: () {...},
         child: const Text("Texto del botón"),
