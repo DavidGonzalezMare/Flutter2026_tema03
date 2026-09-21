@@ -27,9 +27,9 @@ En los siguientes apartados estudiaremos los diferentes tipos de widgets y algun
 [*7. Trabajando con temas*](#_apartado7)
 
 
+<a id="_apartado1"></a>
 
-
-# <a name="_apartado1"></a>1. Introducción a los Widgets
+# 1. Introducción a los Widgets
 
 ## Introducción. Interfaces declarativas e imperativas.
 
@@ -172,7 +172,9 @@ En *el siguiente gist* podéis encontrar este código funcionando:
 <br>
 <br>
 
-# <a name="_apartado2"></a>2. Manos a la obra. Del Hola Mundo al Contador
+<a id="_apartado2"></a>
+
+# 2. Manos a la obra. Del Hola Mundo al Contador
 
 Pasamos ya a la creación de nuestro primer proyecto con *Flutter*. Empezaremos con un sencillo *Hola Mundo* y veremos cómo podemos ir incorporándole widgets hasta convertirlo en una aplicación que gestiona un sencillo contador de clics, como la app de ejemplo de Flutter.
 
@@ -1009,7 +1011,9 @@ Con esto, y a pesar de no haber entrado aún en profundidad con los widgets, hem
 <br>
 <br>
 
-# <a name="_apartado3"></a>3. El ciclo de vida de los widgets
+<a id="_apartado1"></a>
+
+# 3. El ciclo de vida de los widgets
 
 ## Los widgets y el estado
 
@@ -1105,8 +1109,9 @@ En este punto ya tenemos el widget insertado en el árbol y renderizado según a
 - 5c. **Si el widget depende de un *InheritedWidget* y este widget heredado cambia**, se invoca al método didChangeDependencies, reconstruyendo también el widget. Los widget heredados serían un tercer tipo de widget, que permite a un widget descendiente acceder directamente a su estado, sin necesidad de ir ascendiendo en el árbol de widgets hasta llegar a él.
 - 6a. Si el widget no se utilizará más, se invoca a `dispose` para destruirlo. En este método se deberán deternir las animaciones, cerrar conexiones, etc. 
 
+<a id="_apartado4"></a>
 
-# <a name="_apartado4"></a>4. Widgets Básicos
+# 4. Widgets Básicos
 
 ## Widgets de Flutter
 
@@ -1501,7 +1506,9 @@ En *el siguiente gist* podéis encontrar este código funcionando:
 <br>
 <br>
 
-# <a name="_apartado5"></a>5. Contenedores y sistemas de diseño (Layouts)
+<a id="_apartado5"></a>
+
+# 5. Contenedores y sistemas de diseño (Layouts)
 
 Flutter ofrece muchísimos widgets para organizar el contenido. 
 
@@ -2240,7 +2247,9 @@ Por otro lado, este widget, además de detectar *Tabs* puede usarse para detecta
 <br>
 <br>
 
-# <a name="_apartado6"></a>6. Trabajando con recursos
+<a id="_apartado6"></a>
+
+# 6. Trabajando con recursos
 
 Las aplicaciones, aparte del código fuente, pueden incluir recursos de diversa naturaleza, como puedan ser iconos, imágenes, tipografías o ficheros, entre otros. Estos recursos suelen conocerse como ***assets***, y aunque pueden estar ubicados en cualquier ubicación de nuestro proyecto, generalmente los encontraremos en una carpeta llamada `assets`.
 
@@ -2575,7 +2584,9 @@ Center(
 <br>
 <br>
 
-# <a name="_apartado7"></a>7. Trabajando con temas
+<a id="_apartado7"></a>
+
+# 7. Trabajando con temas
 
 Hasta ahora, las aplicaciones que hemos generado o los ejemplos que hemos visto hacen uso del estilo o tema predeterminado de Flutter. Este tema, Hasta Flutter 3.16 las nuevas aplicaciones utilizaban Material 2 de forma predeterminada, y se correspondía a un tema con tonalidades azules. A partir de Flutter 3.16, y el paso a Material 3, el tema predeterminado cambia a un nuevo conjunto de colores, fuentes e iconos, llamado *Tonal System*.
 
